@@ -42,6 +42,7 @@
 ```shell
   sudo su - postgres
   createuser hc --pwprompt #enter password you want for this user
+  exit
 ```
 
 ## Create Database
