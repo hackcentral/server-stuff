@@ -10,7 +10,7 @@ server {
     server_name localhost;
 
     # Application root, as defined previously
-    root /home/deploy/hackcentral;
+    root /home/deploy/hackcentral/current;
 
     try_files $uri/index.html $uri @app;
 
