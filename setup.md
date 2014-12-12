@@ -62,6 +62,13 @@
   gem install unicorn --no-ri --no-rdoc
 ```
 
+## Setup NGINX
+```shell
+  sudo rm /etc/nginx/sites-available/default
+  sudo nano /etc/nginx/sites-available/default #Copy and paste the content from here: https://github.com/hackcentral/server-stuff/blob/master/default
+```
 
-
-
+## Restart NGINX
+```shell
+  sudo service nginx restart
+```
