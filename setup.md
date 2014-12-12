@@ -67,6 +67,11 @@
   sudo rm /etc/nginx/sites-available/default
   sudo nano /etc/nginx/sites-available/default #Copy and paste the content from here: https://github.com/hackcentral/server-stuff/blob/master/default
 ```
+## Making Unicorn work if server restarts
+```shell
+  sudo chmod +x config/unicorn_init.sh
+  sudo ln -s /var/www/hackcentral/config/unicorn_init.sh /etc/init.d/unicorn
+```
 
 ## Restart NGINX
 ```shell
