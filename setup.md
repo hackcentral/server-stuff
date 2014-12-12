@@ -14,6 +14,7 @@
 
 ## Install Ruby 2.1.3 via RVM
 ```shell
+  gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
   curl -L https://get.rvm.io | bash -s stable
   source ~/.rvm/scripts/rvm
   echo "source ~/.rvm/scripts/rvm" >> ~/.bashrc
