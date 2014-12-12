@@ -70,7 +70,7 @@
 ## Making Unicorn work if server restarts
 ```shell
   sudo chmod +x config/unicorn_init.sh
-  sudo ln -s /var/www/hackcentral/config/unicorn_init.sh /etc/init.d/unicorn
+  sudo ln -s /home/deploy/hackcentral/current/config/unicorn_init.sh /etc/init.d/unicorn
 ```
 
 ## Restart NGINX
