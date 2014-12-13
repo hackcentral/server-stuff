@@ -1,81 +1,106 @@
 # HackCentral Server Commands
 
-## Create Deploy User
-```shell
-  sudo adduser deploy
-  sudo adduser deploy sudo
-  su deploy
-```
-
 ## Update packages
 ```shell
-  sudo apt-get update && sudo apt-get upgrade
+apt-get -y update
 ```
 
-## Install Ruby 2.1.3 via RVM
+## Install packages
 ```shell
-  gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
-  curl -L https://get.rvm.io | bash -s stable
-  source ~/.rvm/scripts/rvm
-  echo "source ~/.rvm/scripts/rvm" >> ~/.bashrc
-  rvm install 2.1.3
-  rvm use 2.1.3 --default
+apt-get -y install curl git-core python-software-properties postfix telnet
+apt-get -y update
 ```
 
-## Install Bundler and Rails
+## Install NGINX
 ```shell
-  echo "gem: --no-ri --no-rdoc" > ~/.gemrc
-  sudo gem install bundler rails --no-ri --no-rdoc
-```
-
-## Install NodeJS
-```shell
-  sudo apt-get install nodejs
+add-apt-repository ppa:nginx/stable
+apt-get -y update
+apt-get -y install nginx
+service nginx start
 ```
 
 ## Install PostgreSQL
 ```shell
-  sudo apt-get install postgresql postgresql-contrib libpq-dev
+add-apt-repository ppa:pitti/postgresql
+apt-get -y update
+apt-get -y install postgresql libpq-dev
 ```
 
-## Create Database User
+## Setup Database
 ```shell
-  sudo su - postgres
-  createuser hc --pwprompt #enter password you want for this user
-  exit
+sudo -u postgres psql
+\password #enter new root PG password
+createuser <user> with password ‘<password>’; #change <user> and <password>
+create database <database_name> with owner <user>; #change <database_name> and <user>
+\q
 ```
 
 ## Create Database
 ```shell
-  sudo -u postgres psql postgres
-  CREATE DATABASE hackcentral_production OWNER hc;
-  \q #close out of postgresql session
+sudo -u postgres psql postgres
+CREATE DATABASE hackcentral_production OWNER hc;
+\q #close out of postgresql session
 ```
 
-## Install Git
+## Install Node.js
 ```shell
-  sudo apt-get install git
+add-apt-repository ppa:chris-lea/node.js
+apt-get -y update
+apt-get -y install nodejs
 ```
 
-## Install NGINX and Unicorn
+## Create Deploy User
 ```shell
-  sudo apt-get install nginx
-  cd ~
-  gem install unicorn --no-ri --no-rdoc
+adduser deployer
+adduser deployer sudo
+su - deployer
+cd ~
 ```
 
-## Setup NGINX
+## Install Ruby 2.1.3 via Rbenv
 ```shell
-  sudo rm /etc/nginx/sites-available/default
-  sudo nano /etc/nginx/sites-available/default #Copy and paste the content from here: https://github.com/hackcentral/server-stuff/blob/master/default
+curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
+nano ~/.bashrc
 ```
-## Making Unicorn work if server restarts
+## .bashrc (add the following code)
 ```shell
-  sudo chmod +x config/unicorn_init.sh
-  sudo ln -s /home/deploy/hackcentral/current/config/unicorn_init.sh /etc/init.d/unicorn
+export RBENV_ROOT="${HOME}/.rbenv"
+
+if [ -d "${RBENV_ROOT}" ]; then
+ 	 export PATH="${RBENV_ROOT}/bin:${PATH}"
+  	eval "$(rbenv init -)"
+fi
 ```
 
-## Restart NGINX
+## Continuing to install Ruby 2.1.3 via Rbenv
 ```shell
-  sudo service nginx restart
+rbenv bootstrap-ubuntu-12-04
+rbenv install 2.1.3
+rbenv global 2.1.3
+ruby -v
+```
+
+## Install Bundler and Rails
+```shell
+sudo gem install bundler rails --no-ri --no-rdoc
+rbenv rehash
+```
+
+## Make GitHub a known host
+```shell
+ssh@github.com
+```
+
+## Get rid of default configuration
+```shell
+sudo rm /etc/nginx/sites-enabled/default
+sudo rm /etc/nginx/sites-enabled/default && sudo service nginx restart
+```
+
+## Restart NGINX and Unicorn
+```shell
+sudo service nginx restart
+sudo update-rc.d unicorn_hackcentral defaults
+sudo service nginx restart && sudo service unicorn_hackcentral restart
+
 ```
